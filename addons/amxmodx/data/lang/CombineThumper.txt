@@ -1,0 +1,63 @@
+[en] -- RedSMURF
+THUMPER_CHAT_TAG                                = ^4[COMBINE THUMPER]^1
+THUMPER_CHAT_LIMIT                              = You've reached the maximum number of Combine Thumpers ^4%d
+THUMPER_CHAT_NO_THUMPER                         = There are no Combine Thumpers available
+THUMPER_CHAT_NO_GALLOWS                         = There are no available gallows
+THUMPER_CHAT_CREATE_NEW                         = ^3%s ^1created
+THUMPER_CHAT_REMOVE_CURRENT                     = ^3%s ^1removed
+THUMPER_CHAT_REMOVE_ALL                         = All Combine Thumpers removed
+THUMPER_CHAT_SAVE                               = Combine Thumper data saved in ^4%s
+THUMPER_CHAT_SHOW_CURRENT                       = ^3%s ^1is %L
+THUMPER_CHAT_SHOW_ALL_SHOWN                     = All Combine Thumpers are now Shown
+THUMPER_CHAT_SHOW_ALL_HIDDEN                    = All Combine Thumpers are now Hidden
+THUMPER_CHAT_STATUS_CURRENT                     = ^3%s ^1is %L
+THUMPER_CHAT_STATUS_ALL_ENABLED                 = All Combine Thumpers are now Enabled
+THUMPER_CHAT_STATUS_ALL_DISABLED                = All Combine Thumpers are now Disabled
+
+THUMPER_CHAT_SHOWN                              = Shown
+THUMPER_CHAT_HIDDEN                             = Hidden
+THUMPER_CHAT_ENABLED                            = Enabled
+THUMPER_CHAT_DISABLED                           = Disabled
+
+THUMPER_NAV_NEXT                                = Next
+THUMPER_NAV_BACK                                = Back
+THUMPER_ON                                      = \y[ON]
+THUMPER_OFF                                     = \r[OFF]
+THUMPER_SHOWN                                   = \y[SHOWN]
+THUMPER_HIDDEN                                  = \r[HIDDEN]
+THUMPER_ENABLED                                 = \y[ENABLED]
+THUMPER_DISABLED                                = \r[DISABLED]
+THUMPER_ROTATE_NORMAL                           = \d[NORMAL]
+THUMPER_ROTATE_SMALL                            = \d[SMALL]
+
+THUMPER_MENU_TITLE                              = \dCombine Thumper - Version \y%s
+THUMPER_MENU_TITLE_PAGE                         = \yPage:\r
+THUMPER_ROOT_CREATE                             = Create Thumper
+THUMPER_ROOT_EDIT                               = Edit Thumper
+THUMPER_ROOT_REMOVE                             = Remove Thumper
+THUMPER_ROOT_SAVE                               = Save Data
+THUMPER_ROOT_SHOW                               = Visibility Settings
+THUMPER_ROOT_STATUS                             = Status Settings
+THUMPER_ROOT_NOCLIP                             = Status Noclip %L
+THUMPER_ROOT_GODMODE                            = Status Godmode %L
+THUMPER_ROOT_ROTATE                             = Adjust Rotation
+
+THUMPER_EDIT_SHOW                               = Edit Visibility
+THUMPER_EDIT_STATUS                             = Edit Status
+
+THUMPER_REMOVE_CURRENT                          = Remove Combine Thumper >> \y%s
+THUMPER_REMOVE_ALL                              = Remove all Combine Thumpers
+
+THUMPER_SHOW_CURRENT                            = Show Combine Thumper >> %s%s %L
+THUMPER_SHOW_ALL_SHOW                           = Show all Combine Thumpers
+THUMPER_SHOW_ALL_HIDE                           = Hide all Combine Thumpers
+
+THUMPER_STATUS_CURRENT                          = Enable Combine Thumper >> %s%s %L
+THUMPER_STATUS_ALL_ENABLE                       = Enable all Combine Thumpers
+THUMPER_STATUS_ALL_DISABLE                      = Disable all Combine Thumpers
+
+THUMPER_ROTATE_UP                               = Turn Up
+THUMPER_ROTATE_DOWN                             = Turn Down
+THUMPER_ROTATE_GROUND                           = Set on ground >> %L
+THUMPER_ROTATE_SIZE                             = Rotate Size >> %L
+THUMPER_ROTATE_PLACE                            = Place Combine Thumper
