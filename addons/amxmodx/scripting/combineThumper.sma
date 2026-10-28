@@ -52,6 +52,13 @@
 #define PDATA_NEXT_ATTACK               83
 #define XO_CBASEPLAYER                  5
 #define XO_CBASEPLAYERWEAPON            4
+#define THUMPER_CHECK                   10.0
+#define THUMPER_OFFSET_BASE             120.0
+#define THUMPER_OFFSET_MIN              65.0
+#define THUMPER_OFFSET_MAX              900.0
+#define THUMPER_OFFSET_STEP             10.0
+#define THUMPER_GHOST_ALPHA             120
+#define THUMPER_ROTATION_STEP           22.5
 #define THUMPER_KEY                     756612
 #define THUMPER_TASK_THUMP              191817
 #define THUMPER_ARRAY_ITEM              pev_iuser1
@@ -150,14 +157,8 @@ enum _:MAIN_SETTINGS
     Float:SETTING_MAXS_NORMAL[3],
     Float:SETTING_MINS_SMALL[3],
     Float:SETTING_MAXS_SMALL[3],
-
     bool:SETTING_THUMPER_LOAD,
-    Float:SETTING_THUMPER_CHECK,
-    Float:SETTING_OFFSET_BASE,
-    Float:SETTING_OFFSET[2],
-    Float:SETTING_OFFSET_STEP,
-    SETTING_GHOST_ALPHA,
-    Float:SETTING_ROTATION_STEP
+    Float:SETTING_OFFSET_BASE
 }
 
 enum _:THUMPER
@@ -528,18 +529,8 @@ ReadFile()
                             parseSetting(DTYPE_FLOAT, szValue, charsmax(szValue), g_eSettings[SETTING_MAXS_SMALL], charsmax(g_eSettings[SETTING_MAXS_SMALL]))
                         else if ( equali(szKey, "SETTING_THUMPER_LOAD") )
                             parseSetting(DTYPE_INT, szValue, charsmax(szValue), g_eSettings[SETTING_THUMPER_LOAD], charsmax(g_eSettings[SETTING_THUMPER_LOAD]))
-                        else if ( equali(szKey, "SETTING_THUMPER_CHECK") )
-                            parseSetting(DTYPE_FLOAT, szValue, charsmax(szValue), g_eSettings[SETTING_THUMPER_CHECK], charsmax(g_eSettings[SETTING_THUMPER_CHECK]))
                         else if ( equali(szKey, "SETTING_OFFSET_BASE") )
                             parseSetting(DTYPE_FLOAT, szValue, charsmax(szValue), g_eSettings[SETTING_OFFSET_BASE], charsmax(g_eSettings[SETTING_OFFSET_BASE]))
-                        else if ( equali(szKey, "SETTING_OFFSET") )
-                            parseSetting(DTYPE_FLOAT, szValue, charsmax(szValue), g_eSettings[SETTING_OFFSET], charsmax(g_eSettings[SETTING_OFFSET]))
-                        else if ( equali(szKey, "SETTING_OFFSET_STEP") )
-                            parseSetting(DTYPE_FLOAT, szValue, charsmax(szValue), g_eSettings[SETTING_OFFSET_STEP], charsmax(g_eSettings[SETTING_OFFSET_STEP]))
-                        else if ( equali(szKey, "SETTING_GHOST_ALPHA") )
-                            parseSetting(DTYPE_INT, szValue, charsmax(szValue), g_eSettings[SETTING_GHOST_ALPHA], charsmax(g_eSettings[SETTING_GHOST_ALPHA]))
-                        else if ( equali(szKey, "SETTING_ROTATION_STEP") )
-                            parseSetting(DTYPE_FLOAT, szValue, charsmax(szValue), g_eSettings[SETTING_ROTATION_STEP], charsmax(g_eSettings[SETTING_ROTATION_STEP]))
                     }
                     case SECTION_THUMPER:
                     {
@@ -1187,7 +1178,7 @@ public menuHandlerRotate(id, menu, item)
         case ROTATE_UP:
         {
             pev(eThumper[THUMPER_ID], pev_angles, eThumper[THUMPER_ANGLES])
-            eThumper[THUMPER_ANGLES][1] -= g_eSettings[SETTING_ROTATION_STEP]
+            eThumper[THUMPER_ANGLES][1] -= THUMPER_ROTATION_STEP
             if ( eThumper[THUMPER_ANGLES][1] < -180.0 ) eThumper[THUMPER_ANGLES][1] += 360.0
 
             set_pev(eThumper[THUMPER_ID], pev_angles, eThumper[THUMPER_ANGLES])
@@ -1199,7 +1190,7 @@ public menuHandlerRotate(id, menu, item)
         case ROTATE_DOWN:
         {
             pev(eThumper[THUMPER_ID], pev_angles, eThumper[THUMPER_ANGLES])
-            eThumper[THUMPER_ANGLES][1] += g_eSettings[SETTING_ROTATION_STEP]
+            eThumper[THUMPER_ANGLES][1] += THUMPER_ROTATION_STEP
             if ( eThumper[THUMPER_ANGLES][1] > 180.0 ) eThumper[THUMPER_ANGLES][1] -= 360.0
 
             set_pev(eThumper[THUMPER_ID], pev_angles, eThumper[THUMPER_ANGLES])
@@ -1289,7 +1280,7 @@ stock thumperCreate(id, iItem)
     {
         EnableAction(id)
         g_ePlayerData[id][PDATA_THUMPER_GHOST] = eThumper[THUMPER_ID]
-        g_ePlayerData[id][PDATA_OFFSET] = g_eSettings[SETTING_OFFSET_BASE]
+        g_ePlayerData[id][PDATA_OFFSET] = THUMPER_OFFSET_BASE
 
         eThumper[THUMPER_FLAGS] |= FLAG_GHOST
         eThumper[THUMPER_SIZE] = g_ePlayerData[id][PDATA_ROTATE_SIZE]
@@ -1533,14 +1524,14 @@ public fwdPreThink(id)
             {
                 if ( iButton & IN_ATTACK )
                 {
-                    g_ePlayerData[id][PDATA_OFFSET]      += g_eSettings[SETTING_OFFSET_STEP]
-                    g_ePlayerData[id][PDATA_OFFSET]      = floatclamp(g_ePlayerData[id][PDATA_OFFSET], g_eSettings[SETTING_OFFSET][0], g_eSettings[SETTING_OFFSET][1])
+                    g_ePlayerData[id][PDATA_OFFSET]      += THUMPER_OFFSET_STEP
+                    g_ePlayerData[id][PDATA_OFFSET]      = floatclamp(g_ePlayerData[id][PDATA_OFFSET], THUMPER_OFFSET_MIN, THUMPER_OFFSET_MAX)
                     g_ePlayerData[id][PDATA_NEXT_OFFSET] = fCurrentTime + 0.1
                 }
                 else if ( iButton & IN_ATTACK2 )
                 {
-                    g_ePlayerData[id][PDATA_OFFSET]      -= g_eSettings[SETTING_OFFSET_STEP]
-                    g_ePlayerData[id][PDATA_OFFSET]      = floatclamp(g_ePlayerData[id][PDATA_OFFSET], g_eSettings[SETTING_OFFSET][0], g_eSettings[SETTING_OFFSET][1])
+                    g_ePlayerData[id][PDATA_OFFSET]      -= THUMPER_OFFSET_STEP
+                    g_ePlayerData[id][PDATA_OFFSET]      = floatclamp(g_ePlayerData[id][PDATA_OFFSET], THUMPER_OFFSET_MIN, THUMPER_OFFSET_MAX)
                     g_ePlayerData[id][PDATA_NEXT_OFFSET] = fCurrentTime + 0.1
                 }
             }
@@ -1610,7 +1601,7 @@ stock thumperCheck(id)
     global_get(glb_v_forward, fVec2)
 
     iBest = -1
-    fBestDist = g_eSettings[SETTING_THUMPER_CHECK]
+    fBestDist = THUMPER_CHECK
     for ( new i = 0; i < g_iThumper; i ++ )
     {
         ArrayGetArray(g_aThumper, i, eThumper)
@@ -1881,7 +1872,7 @@ stock thumperSelect(eThumper[THUMPER], iAction)
     }
     else if ( iAction == TARGET_GHOST )
     {
-        set_ent_rendering(eThumper[THUMPER_ID], kRenderFxNone, 255, 255, 255, kRenderTransAlpha, g_eSettings[SETTING_GHOST_ALPHA])
+        set_ent_rendering(eThumper[THUMPER_ID], kRenderFxNone, 255, 255, 255, kRenderTransAlpha, THUMPER_GHOST_ALPHA)
     }
     else if ( iAction == TARGET_HIDE )
     {
