@@ -21,9 +21,7 @@
 #include <amxmodx>
 #include <amxmisc>
 #include <cstrike>
-#include <engine>
 #include <fakemeta>
-#include <fun>
 #include <hamsandwich>
 #include <xs>
 
@@ -182,7 +180,6 @@ enum _:THUMPER
     THUMPER_SHAKE_FREQUENCY,
     THUMPER_SHAKE_DURATION,
     THUMPER_NAME[MAX_VALUE_LENGTH],
-    THUMPER_MODEL[MAX_RESOURCE_PATH_LENGTH],
 
     Float:THUMPER_ORIGIN[3],
     Float:THUMPER_ANGLES[3],
@@ -312,8 +309,6 @@ new Array:g_aThumper,
     g_iThumper, g_iThumperConfig, g_iScreenShake,
     g_iMaxPlayers
 
-new const g_iColorActive[] = { 0, 255, 0 }
-new const g_iColorInactive[] = { 255, 0, 0 }
 new g_szRotateSize[][] = {"THUMPER_ROTATE_NORMAL", "THUMPER_ROTATE_SMALL"}
 
 public plugin_init()
@@ -647,10 +642,10 @@ public menuRoot(id, iMenu)
 
     menu_addblank2(iMenu)
 
-    formatex(szItem, charsmax(szItem), "%L", id, "THUMPER_ROOT_NOCLIP", id, get_user_noclip(id) ? "THUMPER_ON" : "THUMPER_OFF")
+    formatex(szItem, charsmax(szItem), "%L", id, "THUMPER_ROOT_NOCLIP", id, (pev(id, pev_movetype) == MOVETYPE_NOCLIP) ? "THUMPER_ON" : "THUMPER_OFF")
     menu_additem(iMenu, szItem)
 
-    formatex(szItem, charsmax(szItem), "%L", id, "THUMPER_ROOT_GODMODE", id, get_user_godmode(id) ? "THUMPER_ON" : "THUMPER_OFF")
+    formatex(szItem, charsmax(szItem), "%L", id, "THUMPER_ROOT_GODMODE", id, (pev(id, pev_takedamage) == DAMAGE_NO) ? "THUMPER_ON" : "THUMPER_OFF")
     menu_additem(iMenu, szItem)
 }
 
@@ -1466,7 +1461,7 @@ stock LoadDataThumper(iItem, iFlags, iSize, Float:fOrigin[3], Float:fAngles[3], 
 
 public thumperNoClip(id)
 {
-    set_user_noclip(id, !get_user_noclip(id))
+    set_pev(id, pev_movetype, pev(id, pev_movetype) == MOVETYPE_NOCLIP ? MOVETYPE_WALK : MOVETYPE_NOCLIP)
 
     thumperSound(id, SOUND_MENU_NAV)
     thumperMenu(id, MENU_ROOT)
@@ -1474,7 +1469,7 @@ public thumperNoClip(id)
 
 public thumperGodMode(id)
 {
-    set_user_godmode(id, !get_user_godmode(id))
+    set_pev(id, pev_takedamage, pev(id, pev_takedamage) == DAMAGE_NO ? DAMAGE_AIM : DAMAGE_NO)
 
     thumperSound(id, SOUND_MENU_NAV)
     thumperMenu(id, MENU_ROOT)
@@ -1621,7 +1616,7 @@ stock thumperCheck(id)
         fNearest[0] = floatclamp(fVec3[0], fMins[0], fMaxs[0])
         fNearest[1] = floatclamp(fVec3[1], fMins[1], fMaxs[1])
         fNearest[2] = floatclamp(fVec3[2], fMins[2], fMaxs[2])
-        fDist = get_distance_f(fVec3, fNearest)
+        fDist = vector_distance(fVec3, fNearest)
         if ( fDist < fBestDist )
         {
             fBestDist = fDist
@@ -1867,22 +1862,22 @@ stock thumperSelect(eThumper[THUMPER], iAction)
     new iRenderColor[3]
     if ( iAction == TARGET_SELECT )
     {
-        if ( eThumper[THUMPER_FLAGS] & FLAG_ACTIVE )    { iRenderColor[0] = g_iColorActive[0];    iRenderColor[1] = g_iColorActive[1];    iRenderColor[2] = g_iColorActive[2]; }
-        else                                            { iRenderColor[0] = g_iColorInactive[0];  iRenderColor[1] = g_iColorInactive[1];  iRenderColor[2] = g_iColorInactive[2]; }
+        if ( eThumper[THUMPER_FLAGS] & FLAG_ACTIVE )    { iRenderColor[0] = 0;    iRenderColor[1] = 255;    iRenderColor[2] = 0; }
+        else                                            { iRenderColor[0] = 255;  iRenderColor[1] = 0;  iRenderColor[2] = 0; }
 
-        set_ent_rendering(eThumper[THUMPER_ID], kRenderFxGlowShell, iRenderColor[0], iRenderColor[1], iRenderColor[2], kRenderTransAlpha, 16)
+        entitySetRendering(eThumper[THUMPER_ID], kRenderFxGlowShell, iRenderColor[0], iRenderColor[1], iRenderColor[2], kRenderTransAlpha, 16)
     }
     else if ( iAction == TARGET_GHOST )
     {
-        set_ent_rendering(eThumper[THUMPER_ID], kRenderFxNone, 255, 255, 255, kRenderTransAlpha, THUMPER_GHOST_ALPHA)
+        entitySetRendering(eThumper[THUMPER_ID], kRenderFxNone, 255, 255, 255, kRenderTransAlpha, THUMPER_GHOST_ALPHA)
     }
     else if ( iAction == TARGET_HIDE )
     {
-        set_ent_rendering(eThumper[THUMPER_ID], kRenderFxNone, 255, 255, 255, kRenderTransAlpha, 0)
+        entitySetRendering(eThumper[THUMPER_ID], kRenderFxNone, 255, 255, 255, kRenderTransAlpha, 0)
     }
     else if ( iAction == TARGET_CLEAR )
     {
-        set_ent_rendering(eThumper[THUMPER_ID], kRenderFxNone, 255, 255, 255, kRenderNormal, 255)
+        entitySetRendering(eThumper[THUMPER_ID], kRenderFxNone, 255, 255, 255, kRenderNormal, 255)
     }
 }
 
@@ -2085,4 +2080,16 @@ stock LogConfigError(const iLine, const szText[], any:...)
     vformat(szError, charsmax(szError), szText, 3)
 
     log_to_file(ERROR_FILE, "^nLine %d: %s", iLine, szError)
+}
+stock entitySetRendering(iEntity, iRenderFx, iRed, iGreen, iBlue, iRenderMode, iRenderAmt)
+{
+    new Float:fRenderColor[3]
+    fRenderColor[0] = float(iRed)
+    fRenderColor[1] = float(iGreen)
+    fRenderColor[2] = float(iBlue)
+
+    set_pev(iEntity, pev_renderfx, iRenderFx)
+    set_pev(iEntity, pev_rendercolor, fRenderColor)
+    set_pev(iEntity, pev_rendermode, iRenderMode)
+    set_pev(iEntity, pev_renderamt, float(iRenderAmt))
 }
