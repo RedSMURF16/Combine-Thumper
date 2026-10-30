@@ -20,7 +20,6 @@
 
 #include <amxmodx>
 #include <amxmisc>
-#include <cstrike>
 #include <fakemeta>
 #include <hamsandwich>
 #include <xs>
@@ -1265,7 +1264,7 @@ public menuHandlerRotate(id, menu, item)
 
 stock thumperCreate(id, iItem)
 {
-    new iEnt = cs_create_entity("info_target")
+    new iEnt = engfunc(EngFunc_CreateNamedEntity, engfunc(EngFunc_AllocString, "info_target"))
     if ( !pev_valid(iEnt) )
         return
 
@@ -1484,7 +1483,7 @@ public fwdUse(iEnt, iCaller, iActivator, iType, Float:fValue)
     new eThumper[THUMPER], iItem, Float:fCurrentTime
     fCurrentTime = get_gametime()
     if ( (iItem = thumperGet(eThumper, iEnt)) == -1
-    || !(CsTeams:eThumper[THUMPER_USE_TEAM] & cs_get_user_team(iActivator))
+    || !(eThumper[THUMPER_USE_TEAM] & get_user_team(iActivator))
     || fCurrentTime < eThumper[THUMPER_NEXT_USE] )
         return HAM_IGNORED
 
@@ -1661,7 +1660,7 @@ public thumperThump(iTask)
 
         if ( !(eThumper[THUMPER_FLAGS] & (FLAG_DAMAGE | FLAG_PUSH))
         || fDist > eThumper[THUMPER_RANGE_IMPACT]
-        || !(CsTeams:eThumper[THUMPER_TEAM] & cs_get_user_team(id)) )
+        || !(eThumper[THUMPER_TEAM] & get_user_team(id)) )
             continue
 
         fFactor = 1.0 - (fDist / eThumper[THUMPER_RANGE_IMPACT])
