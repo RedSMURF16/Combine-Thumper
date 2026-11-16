@@ -40,3 +40,5 @@ Players can configure Thumpers with different effects, including screen shaking,
 ```text
 * v1.0: Initial release.
 ```
+
+[![Watch on YouTube](https://img.shields.io/badge/YouTube-Watch%20video-FF0000?logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=DpkAH8w0KUs)
