@@ -17,6 +17,10 @@ Players can configure Thumpers with different effects, including screen shaking,
 - Choose between normal and small Combine Thumper models
 - Configure default behavior and create custom Thumper presets
 
+## 📋 Requirements
+- ReGameDLL
+- AMX Mod X 1.10+
+
 ## ⚙️ Configuration
 ```ini
 # To add a new Combine Thumper, follow the example below:
