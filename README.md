@@ -1,7 +1,7 @@
 <h1 align="center">Combine Thumper</h1>
 
 <p align="center">
-  <a href="https://www.youtube.com/watch?v=DpkAH8w0KUs"><img src="https://img.youtube.com/vi/DpkAH8w0KUs/maxresdefault.jpg" alt="Watch on YouTube" width="600"></a>
+  <img src="images/demo.gif" alt="Combine Thumper">
 </p>
 
 ## 📝 Description
